@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .h1-bold {
+    @apply text-red-700 text-[30px] font-bold leading-[42px] tracking-tighter;
+  }
+}
