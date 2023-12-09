@@ -1,10 +1,16 @@
+
+
+import { nextui } from '@nextui-org/theme'
+
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: ['class'],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@nextui-org/theme/dist/components/(tabs|modal|avatar|divider).js'
   ],
   theme: {
     // container: {
@@ -20,11 +26,14 @@ const config: Config = {
       //   'gradient-conic':
       //     'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       // },
-      
+      fontFamily: {
+        trap: ['var(--font-trap)']
+      },
+
       colors: {
         // primary: tradewind
-        // secondary: Contessa
-        // Accent: Celery
+        // Secondary: Celery
+        // Accent: Contessa
 
         tradewind: {
           50: "#eff9f7",
@@ -71,9 +80,22 @@ const config: Config = {
           500: "#000000",
         }
       },
-     
+      keyframes: {
+        "accordion-down": {
+          from: { height: '0'},
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: '0' },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
   },
-  plugins: [],
+  plugins: [nextui(), require("tailwindcss-animate")],
 }
 export default config

@@ -3,7 +3,41 @@
 @tailwind utilities;
 
 @layer utilities {
+
+  .bg-l50-d400 {
+    @apply bg-zinc-100 dark:bg-dark-400
+  }
+  .bg-white80-d700 {
+    @apply bg-white/80 dark:bg-slate-700/50
+  }
+  .bg-white-d700 {
+    @apply bg-white dark:bg-slate-700/50
+  }
+
+  .flex-ctr {
+    @apply flex items-center
+  }
+  .flex-ctr-ard {
+    @apply flex items-center justify-between
+  }
+  .flex-ctr-btw {
+    @apply flex items-center justify-between
+  }
   .h1-bold {
     @apply text-red-700 text-[30px] font-bold leading-[42px] tracking-tighter;
   }
+  .text-l7-d9 {
+    @apply text-slate-700 dark:text-slate-900
+  }
+  .text-l7-d3 {
+    @apply text-slate-700 dark:text-slate-300
+  }
+  .text-l5-d4 {
+    @apply text-slate-500 dark:text-slate-400
+  }
+  .text-lz4-d5 {
+    @apply text-zinc-400 dark:text-slate-500
+  }
+
+
 }

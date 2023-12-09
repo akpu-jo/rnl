@@ -4,11 +4,27 @@
 
 @import url("../styles/theme.css");
 
+@layer components {
+  .leftsidebar {
+    @apply sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto border-r dark:border-slate-500 py-6 pr-16  max-md:hidden;
+  }
+
+  .main-container {
+    @apply flex min-h-screen flex-1 flex-col items-center pb-10 pt-6 max-md:pb-32 sm:px-10;
+  }
+}
+
 @layer utilities {
-    .flex-center {
-        @apply flex justify-center items-center
-    }
-    .flex-between {
-        @apply flex justify-between items-center;
-      }
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+}
+body {
+  font-family: var(--font-trap);
+}
+.bg-img {
+  background-image: url("/logo.svg");
 }
