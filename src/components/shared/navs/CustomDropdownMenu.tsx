@@ -14,7 +14,7 @@ import ButtonWithIcon from "@/components/ui/buttons/Button";
 const CustomDropdownMenu = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="relative rounded-r-lg bg-tradewind-500 p-2 hover:bg-tradewind-900/80 focus:outline-none dark:bg-tradewind-900 dark:hover:bg-tradewind-900/80">
+      <DropdownMenuTrigger className="bg-tradewind-500 hover:bg-tradewind-900/80 dark:bg-tradewind-900 dark:hover:bg-tradewind-900/80 relative rounded-r-lg p-2 focus:outline-none">
         <ChevronDownIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" bg-l50-d400 absolute -right-4 top-3 px-2 dark:border-slate-600 ">
@@ -42,4 +42,3 @@ const CustomDropdownMenu = () => {
 };
 
 export default CustomDropdownMenu;
-

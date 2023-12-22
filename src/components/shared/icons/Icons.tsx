@@ -1,5 +1,27 @@
 import React from "react";
 
+export const AddImageIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width={1.5}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className="lucide lucide-image-plus"
+    >
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
+      <line x1="16" x2="22" y1="5" y2="5" />
+      <line x1="19" x2="19" y1="2" y2="8" />
+      <circle cx="9" cy="9" r="2" />
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+    </svg>
+  );
+};
 export const ArticleIcon = () => {
   return (
     <svg
@@ -283,11 +305,11 @@ export const MailIcon = ({
   dec,
   ...props
 }: {
-  fill: string;
-  size: number;
-  height: string;
-  width: string;
-  dec: string;
+  fill?: string;
+  size?: number;
+  height?: string;
+  width?: string;
+  dec?: string;
 }) => {
   return (
     <svg
@@ -443,7 +465,31 @@ export const ShareIcon = () => {
     </svg>
   );
 };
-export const VerticalDotsIcon = ({className}: {className?: string | undefined}) => {
+
+export const SmileyIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      // dataSlot={"icon"}
+      className="h-7 w-7"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"
+      />
+    </svg>
+  );
+};
+export const VerticalDotsIcon = ({
+  className,
+}: {
+  className?: string | undefined;
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

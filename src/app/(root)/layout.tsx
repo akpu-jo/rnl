@@ -1,3 +1,4 @@
+import NewNote from "@/components/notes/NewNote";
 import LeftSideBar from "@/components/shared/navs/LeftSidebar";
 // import RightSidebar from "@/components/shared/navs/RightSidebar";
 import React from "react";
@@ -13,6 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </section>
           {/* <RightSidebar /> */}
       </main>
+      <NewNote />
     </div>
   );
 }

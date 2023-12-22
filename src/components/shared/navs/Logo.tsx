@@ -16,7 +16,7 @@ const Logo = ({
       className={` ${textColor && textColor} flex items-center justify-start gap-2 text-4xl `}
     >
       <Image alt="rn-linked logo" src={logoSrc || "/logo.svg"} width={40} height={40} />
-      {showText && <span className="">rnlinked.</span>}
+      {showText && <span className=" hidden lg:block">rnlinked.</span>}
     </div>
   );
 };

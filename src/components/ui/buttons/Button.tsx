@@ -1,22 +1,24 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
+
+interface ExtraClass {
+  icon?: React.ReactNode;
+  label?: string;
+  action?: MouseEventHandler<HTMLButtonElement> | undefined;
+  extraClass? : string
+}
 
 const ButtonWithIcon = ({
   icon,
   label,
   action,
   extraClass
-}: {
-  icon?: React.ReactNode;
-  label?: string;
-  action?: Function;
-  extraClass? : string
-}) => {
+}: ExtraClass) => {
   return (
-    <button className={` ${extraClass} flex items-center justify-between gap-3 p-2 text-lg font-normal tracking-wide`}>
+    <button onClick={action} className={` ${extraClass} flex items-center justify-between gap-3  text-lg font-normal tracking-wide`}>
       <>{icon}</>
       {label}
     </button>
   );
 };
 
-export default ButtonWithIcon;
+export default ButtonWithIcon; 

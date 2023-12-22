@@ -9,14 +9,6 @@ const AuthOptions = () => {
   const pathname = usePathname();
   const isSignup = pathname === "/sign-up";
 
-  // const heading = !isSignup
-  //   ? "Welcome back."
-  //   : showEmailOptIn
-  //     ? "Your Personal Experience."
-  //     : showVerifyEmail
-  //       ? "Verify Your Email"
-  //       : "Join RNlinked.";
-
   return <>{isSignup ? <SignUpOptions /> : <SignInOptions />}</>;
 };
 

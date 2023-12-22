@@ -7,11 +7,18 @@
   .bg-l50-d400 {
     @apply bg-zinc-100 dark:bg-dark-400
   }
+  .bg-white-d400 {
+    @apply bg-white dark:bg-dark-400
+  }
   .bg-white80-d700 {
     @apply bg-white/80 dark:bg-slate-700/50
   }
   .bg-white-d700 {
     @apply bg-white dark:bg-slate-700/50
+  }
+
+  .ring-w1-d8 {
+    @apply ring-1 ring-slate-100  dark:ring-zinc-800
   }
 
   .flex-ctr {

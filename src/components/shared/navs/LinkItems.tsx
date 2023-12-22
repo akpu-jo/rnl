@@ -6,18 +6,18 @@ const LinkItems = ({
   icon,
   route = "#",
   active = false,
-  extraClass
+  extraClass,
 }: {
   label: string;
   icon: React.ReactNode;
   route: string;
   active: boolean;
-  extraClass?: string
+  extraClass?: string;
 }) => {
   return (
     <Link
       href={route}
-      className={` ${extraClass} flex w-fit items-center justify-start gap-3 rounded p-2 px-5 text-2xl font-light hover:bg-dark-50/10 dark:hover:bg-celery-50/10  `}
+      className={` ${extraClass} hover:bg-dark-50/10 dark:hover:bg-celery-50/10 flex w-fit items-center justify-start gap-3 rounded p-2 px-5 text-2xl font-light  `}
     >
       <>{icon}</>
       <p className={`hidden tracking-wide xl:block ${active && "font-medium"}`}>

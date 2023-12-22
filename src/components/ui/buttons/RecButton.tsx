@@ -1,19 +1,20 @@
 /* eslint-disable tailwindcss/migration-from-tailwind-2 */
-import React from "react";
+import React, { MouseEventHandler } from "react";
+
 interface RecButtonType {
-  btnType: "button" | "submit" | "reset" | undefined;
-  disabled: boolean;
-  action: any;
+  btnType?: "button" | "submit" | "reset" | undefined;
+  disabled?: boolean;
+  action?: MouseEventHandler<HTMLButtonElement> | undefined;
   label: string;
-  icon: React.ReactNode;
-  bg: string;
-  textColor: string;
+  icon?: React.ReactNode;
+  bg?: string;
+  textColor?: string;
 }
 
 const RecButton = ({
   btnType,
   disabled,
-  action = (f: any) => f,
+  action,
   label,
   icon,
   bg,
@@ -25,15 +26,11 @@ const RecButton = ({
       type={btnType}
       disabled={disabled}
       onClick={action}
-      className={` flex w-full items-center justify-center gap-5 text-lg sm:text-base ${
-        bg
-          ? `${bg} active:bg-opacity-90`
-          : " bg-slate-50 active:bg-slate-100/90"
-      } dark:bg-slate-200  ${
-        textColor || "text-slate-700"
+      className={` flex w-full items-center justify-center gap-5 text-lg sm:text-base ${bg} ${
+        textColor || ""
       } px-14 py-2 tracking-wide ring-1 ${
         disabled && "cursor-not-allowed bg-opacity-50"
-      } my-[calc(0.3rem)] rounded-sm outline-none ring-slate-200  `}
+      } ring-w1-d8 my-[calc(0.3rem)] rounded-sm outline-none `}
     >
       {icon}
       {label}

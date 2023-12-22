@@ -1,5 +1,4 @@
 import React from "react";
-import { Avatar } from "@nextui-org/avatar";
 import { formatTime } from "@/constants/timeFormat";
 import {
   BookmarkIcon,
@@ -8,19 +7,16 @@ import {
   HeartIcon,
   ShareIcon,
   VerticalDotsIcon,
-} from "../icons/Icons";
+} from "../shared/icons/Icons";
 import ButtonWithIcon from "@/components/ui/buttons/Button";
+import UserAvatar from "../shared/UserAvatar";
 
 const NoteCard = ({ note }: { note: any }) => {
   return (
     <div className=" bg-white-d700 space-y-4 rounded-lg p-8 dark:bg-slate-700/40">
       <section className=" flex-ctr-btw gap-3">
         <div className=" flex-ctr gap-3">
-          <Avatar
-            radius="lg"
-            showFallback
-            src="https://images.unsplash.com/broken"
-          />
+          <UserAvatar radius={"lg"} src={""} />
           <div>
             <span className=" flex-ctr gap-2">
               <h3 className=" font-semibold">{note.author.name}</h3>
@@ -36,7 +32,6 @@ const NoteCard = ({ note }: { note: any }) => {
       <section className="flex-ctr-ard gap-3  text-slate-500">
         <span className=" flex-ctr ">
           <ButtonWithIcon
-          label=" 1milion"
             icon={<HeartIcon />}
             extraClass=" hover:bg-slate-500/10 rounded-lg"
           />

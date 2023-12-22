@@ -9,16 +9,29 @@ import {
 import HorizontalRule from "@/components/ui/HorizontalRule";
 import RecButton from "@/components/ui/buttons/RecButton";
 import Input from "@/components/ui/inputs/Input";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { google, twitter } from "@/lib/firebase/init";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import EmailVerification from "../verification/EmailVerification";
 
 const SignInOptions = () => {
-  const { signinWithProvider } = useAuth();
+  const { signinWithProvider, signin, authFlowStates } = useAuth();
+
+  const { showVerifyEmail } = authFlowStates;
+
   const router = useRouter();
+
   const [showOptions, setShowOptions] = useState(true);
   const [showForm, setShowForm] = useState(false);
+
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { email, password } = userData;
+
   const showSigninWithEmail = () => {
     setShowOptions(false);
     setShowForm(true);
@@ -71,8 +84,8 @@ const SignInOptions = () => {
         <div className="text-l7-d3 py-5 text-center tracking-wide">
           <span>Don&apos;t have an account?</span>
           <button
-            onClick={() => router.replace("/sign-up", {scroll: false})}
-            className=" text-lg font-semibold tracking-wide text-tradewind-600 sm:text-base"
+            onClick={() => router.replace("/sign-up", { scroll: false })}
+            className=" text-tradewind-600 text-lg font-semibold tracking-wide sm:text-base"
           >
             Sign up
           </button>
@@ -86,37 +99,28 @@ const SignInOptions = () => {
         <Input
           type={"email"}
           placeholder={"Email"}
-          icon={
-            <MailIcon
-              fill={"currentColor"}
-              size={0}
-              height={""}
-              width={""}
-              dec={""}
-            />
-          }
-          value={undefined}
-          onChange={undefined}
+          icon={<MailIcon fill={"currentColor"} />}
+          value={email}
+          onChange={(e) => setUserData({ ...userData, email: e.target.value })}
         />
         <Input
           type={"password"}
           placeholder={"Password"}
           icon={<LockIcon />}
-          value={undefined}
-          onChange={undefined}
+          value={password}
+          onChange={(e) =>
+            setUserData({ ...userData, password: e.target.value })
+          }
         />
         <RecButton
-          btnType={undefined}
-          disabled={false}
-          action={undefined}
+          btnType={"submit"}
+          action={(e) => signin(e, email, password)}
           label={"Sign In"}
-          icon={undefined}
           bg={"bg-tradewind-900/70 font-semibold tracking-wider"}
-          textColor={""}
         />
         <button
           onClick={() => showSigninOptions()}
-          className=" my-10 flex w-full items-center justify-center gap-2 text-sm tracking-wide text-tradewind-900"
+          className=" text-tradewind-900 my-10 flex w-full items-center justify-center gap-2 text-sm tracking-wide"
         >
           <DoubleChevronLeftIcon />
           Back to sign in options
@@ -126,9 +130,15 @@ const SignInOptions = () => {
   };
   return (
     <div className=" flex flex-col items-center gap-10">
-      <h2 className="text-3xl font-semibold  ">{heading}</h2>
-      {showOptions && options()}
-      {showForm && signinWithEmail()}
+      {showVerifyEmail ? (
+        <EmailVerification />
+      ) : (
+        <>
+          <h2 className="text-3xl font-semibold  ">{heading}</h2>
+          {showOptions && options()}
+          {showForm && signinWithEmail()}
+        </>
+      )}
     </div>
   );
 };

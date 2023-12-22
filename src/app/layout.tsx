@@ -5,7 +5,7 @@ import React from "react";
 // import { Inter } from 'next/font/google'
 import fontFile from "next/font/local";
 // import { ThemeProvider } from "@/context/ThemeContext";
-import { Providers } from "@/context/providers";
+import { Providers } from "@/contexts/providers";
 
 const trap = fontFile({
   src: [
@@ -49,19 +49,18 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-
   children,
-  auth
+  auth,
 }: {
   children: React.ReactNode;
-  auth: React.ReactNode; 
+  auth: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={trap.variable} >
+      <body className={trap.variable}>
         <Providers>
           {auth}
-           {children}
+          {children}
         </Providers>
       </body>
     </html>
