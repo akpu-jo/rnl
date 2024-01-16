@@ -2,34 +2,37 @@
 
 import { api } from "@/constants";
 import { auth } from "@/lib/firebase/init";
-import { useDisclosure } from "@nextui-org/modal";
 import axios from "axios";
-import { setCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 import {
   AuthProvider as AuthProviderProp,
   User,
   UserCredential,
   createUserWithEmailAndPassword,
+  getAdditionalUserInfo,
+  onAuthStateChanged,
   sendEmailVerification,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface AuthContextValue {
   signinWithProvider: (provider: AuthProviderProp) => Promise<UserCredential>;
-  setUser: React.Dispatch<React.SetStateAction<null>>;
-  user: object | null;
+  setSessionUser: React.Dispatch<React.SetStateAction<null>>;
+  sessionUser: object | null;
   signin: (email: string, password: string) => Promise<UserCredential>;
   signup: (email: string, password: string) => Promise<UserCredential>;
   signout: () => Promise<void>;
   verifyEmail: () => void;
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  onOpenChange: () => void;
   setAuthFlowStates: React.Dispatch<
     React.SetStateAction<{
       loading: boolean;
@@ -38,7 +41,7 @@ interface AuthContextValue {
       isSignup: boolean;
       signinForm: boolean;
       signupForm: boolean;
-      showOptions: boolean;
+      openAuthModal: boolean;
       showEmailOptIn: boolean;
       showVerifyEmail: boolean;
       openCatchUp: boolean;
@@ -53,7 +56,7 @@ interface AuthContextValue {
     isSignup: boolean;
     signinForm: boolean;
     signupForm: boolean;
-    showOptions: boolean;
+    openAuthModal: boolean;
     showEmailOptIn: boolean;
     showVerifyEmail: boolean;
     openCatchUp: boolean;
@@ -70,7 +73,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
-  const [user, setUser] = useState(null);
+  const [sessionUser, setSessionUser] = useState(null);
 
   const [authFlowStates, setAuthFlowStates] = useState({
     loading: false,
@@ -79,7 +82,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isSignup: false,
     signinForm: false,
     signupForm: false,
-    showOptions: true,
+    openAuthModal: true,
     showEmailOptIn: false,
     showVerifyEmail: false,
     openCatchUp: false,
@@ -87,24 +90,55 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     emailVerificationCatchUp: false,
   });
 
-  // authmodal imports
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const findAndSetUser = useCallback(
+    async (session: User, dbUser?: object) => {
+      let userData;
 
-  const findAndSetUser = async (session: User, forwardRoute?: string) => {
-    const { data } = await axios.get(`${api}/users/${session.uid}`);
-    const { user } = data;
+      const url =
+        window.location.hostname === "localhost"
+          ? `${api}/users/${session.uid}`
+          : `http://${window.location.hostname}:8000/api/v1/users/${session.uid}`;
+      try {
+        if (!dbUser) {
+          const { data } = await axios.get(url);
+          userData = data.user;
+        }
 
-    if (!session.emailVerified) {
-      await verifyEmail();
-      setAuthFlowStates({ ...authFlowStates, showVerifyEmail: true });
-    } else {
-      setCookie("token", await session.getIdToken(true));
+        if (!session.emailVerified) {
+          verifyEmail();
+          setAuthFlowStates({ ...authFlowStates, showVerifyEmail: true });
+        } else {
+          setCookie("token", await session.getIdToken(true));
 
-      setUser(user);
-      console.log(forwardRoute);
-      router.push(forwardRoute || "/");
-    }
-  };
+          setSessionUser(dbUser || userData);
+          setAuthFlowStates({ ...authFlowStates, openAuthModal: false });
+          console.log("go here", authFlowStates.openAuthModal);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [authFlowStates]
+  );
+
+  useEffect(() => {
+    console.log(window.location.hostname);
+  }, []);
+
+  useEffect(() => {
+    setAuthFlowStates({ ...authFlowStates, loading: true });
+    if (authFlowStates.inAuthFlow) return;
+    const unsubscribe = onAuthStateChanged(auth, async (session) => {
+      if (session) {
+        await findAndSetUser(session);
+      } else {
+        setSessionUser(null);
+      }
+      setAuthFlowStates({ ...authFlowStates, loading: false });
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Auth functions
   const signup = (
@@ -141,12 +175,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signin = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
     email: string,
-    password: string
+    password: string,
+    forwardRoute?: string
   ) => {
     event.preventDefault();
+    console.log("ForwardRoute", forwardRoute);
     return signInWithEmailAndPassword(auth, email, password)
       .then(async (session) => {
         await findAndSetUser(session.user);
+        router.replace(forwardRoute || "/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -155,12 +192,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
   };
 
-  const signinWithProvider = (provider: AuthProviderProp) => {
-    return signInWithPopup(auth, provider);
+  const signinWithProvider = (
+    provider: AuthProviderProp,
+    forwardRoute: string
+  ) => {
+    setAuthFlowStates({ ...authFlowStates, loading: true });
+
+    return signInWithPopup(auth, provider)
+      .then(async (session) => {
+        const userInfo = getAdditionalUserInfo(session);
+        const isNewUser = userInfo?.isNewUser;
+
+        if (!isNewUser) {
+          await findAndSetUser(session.user);
+          router.replace(forwardRoute || "/");
+        } else {
+          setAuthFlowStates({ ...authFlowStates, loading: false });
+
+          const payload = {
+            name: session.user.displayName,
+            email: session.user.email,
+            uid: session.user.uid,
+            image: session.user.photoURL,
+            signinMethod: session.providerId,
+            emailVerified: session.user.emailVerified,
+          };
+          const {
+            data: { user },
+          } = await axios.post(`${api}/users`, payload);
+          await findAndSetUser(session.user, user);
+          router.replace(forwardRoute || "/");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        // setLoading(false);
+      })
+      .finally(() =>
+        setAuthFlowStates({
+          ...authFlowStates,
+          loading: false,
+          openAuthModal: false,
+        })
+      );
   };
 
   const signout = async () => {
     await signOut(auth);
+    setSessionUser(null);
+    deleteCookie("token");
+    router.push("/welcome");
   };
 
   const verifyEmail = () => {
@@ -171,17 +252,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
-        setUser,
+        sessionUser,
+        setSessionUser,
         signin,
         signup,
         signinWithProvider,
         signout,
         verifyEmail,
-        isOpen,
-        onOpen,
-        onClose,
-        onOpenChange,
         authFlowStates,
         setAuthFlowStates,
       }}

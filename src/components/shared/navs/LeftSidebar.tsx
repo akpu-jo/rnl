@@ -1,20 +1,26 @@
+"use client";
 import React from "react";
 import Logo from "./Logo";
 import LinkItems from "./LinkItems";
 import HomeIcon from "../icons/HomeIcon";
 import ProfileIcon from "../icons/ProfileIcon";
-import { ArticleIcon, BarsIcon, BellIcon, SearchIcon } from "../icons/Icons";
+import { ArticleIcon, BellIcon, SearchIcon } from "../icons/Icons";
+import { useAuth } from "@/contexts/AuthContext";
+import MoreNavOptions from "./MoreNavOptions";
 
 // import { HomeIcon } from "@heroicons/react/24/outline";
 
 const LeftSideBar = () => {
+  const { sessionUser } = useAuth();
+  const { username} = sessionUser !==null && sessionUser
+
   return (
     <section className=" leftsidebar">
       <div className=" space-y-12">
         <nav className=" pl-5">
           <Logo textColor={""} logoSrc={""} showText={true} />
         </nav>
-        <div className=" space-y-5">
+        <div className=" space-y-5" suppressHydrationWarning>
           <LinkItems
             label={"Home"}
             icon={<HomeIcon />}
@@ -24,7 +30,7 @@ const LeftSideBar = () => {
           <LinkItems
             label={"Articles"}
             icon={<ArticleIcon />}
-            route={"/"}
+            route={`/articles`}
             active={false}
           />
           <LinkItems
@@ -39,21 +45,24 @@ const LeftSideBar = () => {
             route={"/"}
             active={false}
           />
-          <LinkItems
-            label={"Profile"}
-            icon={<ProfileIcon />}
-            route={"/"}
-            active={false}
-          />
+          {sessionUser && (
+            <LinkItems
+              label={"Profile"}
+              icon={<ProfileIcon />}
+              route={`/${username}`}
+              active={false}
+            />
+          )}
+          {/* {sessionUser && (
+            <LinkItems
+              icon={<ComposeBtn />}
+              active={false}
+            />
+          )} */}
         </div>
       </div>
       <div>
-        <LinkItems
-          label={"More"}
-          icon={<BarsIcon />}
-          route={"/"}
-          active={false}
-        />
+        <MoreNavOptions />
       </div>
     </section>
   );

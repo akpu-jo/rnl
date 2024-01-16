@@ -11,16 +11,19 @@ import RecButton from "@/components/ui/buttons/RecButton";
 import Input from "@/components/ui/inputs/Input";
 import { useAuth } from "@/contexts/AuthContext";
 import { google, twitter } from "@/lib/firebase/init";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import EmailVerification from "../verification/EmailVerification";
 
 const SignInOptions = () => {
-  const { signinWithProvider, signin, authFlowStates } = useAuth();
+  const { signinWithProvider, signin, authFlowStates: {showVerifyEmail} } = useAuth();
 
-  const { showVerifyEmail } = authFlowStates;
 
   const router = useRouter();
+  const queryParams = useSearchParams();
+
+  const forwardRoute = queryParams.get("forward")
+
 
   const [showOptions, setShowOptions] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -94,6 +97,7 @@ const SignInOptions = () => {
     );
   };
   const signinWithEmail = () => {
+    console.log(forwardRoute)
     return (
       <form action="" className="flex w-full max-w-xs flex-col gap-1">
         <Input
@@ -114,7 +118,7 @@ const SignInOptions = () => {
         />
         <RecButton
           btnType={"submit"}
-          action={(e) => signin(e, email, password)}
+          action={(e) => signin(e, email, password, forwardRoute)}
           label={"Sign In"}
           bg={"bg-tradewind-900/70 font-semibold tracking-wider"}
         />

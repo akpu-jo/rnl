@@ -11,6 +11,7 @@ import ListLink from "./shared/ListLink";
 import X from "./shared/socials/X";
 
 import HorizontalRule from "./ui/HorizontalRule";
+import AuthButton from "@/app/(onboarding)/components/AuthButton";
 
 const Welcome = () => {
   const year = new Date().getFullYear();
@@ -24,21 +25,16 @@ const Welcome = () => {
                 <Logo textColor={""} logoSrc={"/logo.svg"} showText={true} />
               </Link>
               <ul className=" flex items-center justify-end gap-6">
-                <Link
-                  scroll={false}
-                  href={"/sign-in"}
-                  className=" rounded-sm bg-slate-50 p-2 px-3 text-xl font-light tracking-wider ring-1 ring-slate-100 "
-                >
-                  Sign in
-                </Link>
-
-                <Link
-                  scroll={false}
+                <AuthButton
+                  label={"Sign In"}
+                  authType={"sign-in"}
+                  className="rounded-sm bg-slate-50 p-2 px-3 text-xl font-light tracking-wider ring-1 ring-slate-100"
+                />
+                <AuthButton
+                  label={"Get started"}
+                  authType={"sign-in"}
                   className=" bg-tradewind-900 ring-tradewind-400 rounded-sm p-2 px-5 text-xl font-light tracking-wide text-white ring-1"
-                  href={"/sign-up"}
-                >
-                  Get started
-                </Link>
+                />
               </ul>
             </nav>
           </header>
@@ -57,13 +53,11 @@ const Welcome = () => {
                 RNlinked is designed to connect you with colleagues and to
                 opportunities.
               </p>
-              <Link
-                scroll={false}
-                href={"/sign-up"}
+              <AuthButton
+                label={"Get Started"}
+                authType={"sign-up"}
                 className=" bg-tradewind-900 ring-tradewind-400 rounded-sm p-3 px-14 text-xl font-light tracking-wide text-white ring-1 "
-              >
-                Get Started
-              </Link>
+              />
             </div>
             <div className=" grid max-w-lg basis-2/5 grid-flow-col grid-cols-2 grid-rows-2 gap-4">
               <Image
@@ -193,9 +187,13 @@ const Welcome = () => {
                       collaborate on research projects with your network.
                     </p>
                   </div>
-                  <Link scroll={false} href={"/sign-up"} className="z-20">
-                    <ArrowUpRightIcon className=" h-10 w-10 rounded-full border border-slate-900 p-2" />
-                  </Link>
+                  <AuthButton
+                    label={
+                      <ArrowUpRightIcon className=" h-10 w-10 rounded-full border border-slate-900 p-2" />
+                    }
+                    authType={"sign-up"}
+                    className="z-20"
+                  />
                 </div>
               </div>
             </div>

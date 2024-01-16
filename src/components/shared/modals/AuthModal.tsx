@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
-import AuthOptions from "@/components/auth/AuthOptions";
+import AuthOptions from "@/app/(onboarding)/components/AuthOptions";
 import Logo from "../navs/Logo";
 import { useRouter } from "next/navigation";
 

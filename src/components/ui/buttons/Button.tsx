@@ -1,8 +1,8 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, ReactNode } from "react";
 
 interface ExtraClass {
-  icon?: React.ReactNode;
-  label?: string;
+  icon?: ReactNode;
+  label?: string | ReactNode;
   action?: MouseEventHandler<HTMLButtonElement> | undefined;
   extraClass? : string
 }

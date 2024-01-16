@@ -5,7 +5,7 @@
 @layer utilities {
 
   .bg-l50-d400 {
-    @apply bg-zinc-100 dark:bg-dark-400
+    @apply bg-neutral-50 dark:bg-dark-400
   }
   .bg-white-d400 {
     @apply bg-white dark:bg-dark-400
@@ -24,8 +24,14 @@
   .flex-ctr {
     @apply flex items-center
   }
+  .flex-ctr-ctr {
+    @apply flex items-center justify-center
+  }
+  .flex-ctr-end {
+    @apply flex items-center
+  }
   .flex-ctr-ard {
-    @apply flex items-center justify-between
+    @apply flex items-center justify-around
   }
   .flex-ctr-btw {
     @apply flex items-center justify-between

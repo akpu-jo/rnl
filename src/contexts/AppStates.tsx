@@ -1,20 +1,53 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { ReactNode, createContext, useContext, useState } from "react";
 
 interface AppContextType {
-    newNoteTogle: boolean;
-    setNewNoteTogle: (newNoteTogle: boolean) => void;
+  newNoteTogle: boolean;
+  setNewNoteTogle: (newNoteTogle: boolean) => void;
+  navContent: {
+    right: string | ReactNode;
+    left: string | ReactNode;
+    center: string | ReactNode;
+  };
+  setNavContent: React.Dispatch<
+    React.SetStateAction<{
+      right: string | ReactNode;
+      left: string | ReactNode;
+      center: string | ReactNode;
+    }>
+  >;
 }
 
 const AppStateContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppStateProvider = ({ children }: { children: React.ReactNode }) => {
+export const AppStateProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [newNoteTogle, setNewNoteTogle] = useState(false);
-
+  const [navContent, setNavContent] = useState({
+    right: <></>,
+    left: <></>,
+    center: <></>,
+  });
 
   return (
-    <AppStateContext.Provider value={{ newNoteTogle, setNewNoteTogle }}>
+    <AppStateContext.Provider
+      value={{
+        newNoteTogle,
+        setNewNoteTogle,
+        navContent,
+        setNavContent: setNavContent as React.Dispatch<
+          React.SetStateAction<{
+            right: string | ReactNode;
+            left: string | ReactNode;
+            center: string | ReactNode;
+          }>
+        >,
+      }}
+    >
       {children}
     </AppStateContext.Provider>
   );

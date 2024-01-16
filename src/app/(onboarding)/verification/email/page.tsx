@@ -1,11 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 // import { Loading } from "@nextui-org/react";
-import { Spinner } from "@nextui-org/spinner";
 import axios from "axios";
 import { applyActionCode, checkActionCode } from "firebase/auth";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,9 +12,10 @@ import Logo from "@/components/shared/navs/Logo";
 import { useMutation } from "@tanstack/react-query";
 import { auth } from "@/lib/firebase/init";
 import { api } from "@/constants";
+import LoadingState from "@/components/ui/LoadingState";
 
 const VerifyEmail = () => {
-  const { setUser } = useAuth();
+  const { setSessionUser } = useAuth();
 
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -26,16 +25,15 @@ const VerifyEmail = () => {
     mode: queryParams.get("mode"),
   };
 
-  const [verifying, setVerifying] = useState(false);
 
   const {
     mutate: verifyUser,
     isPending,
     isError,
-    isSuccess,
+    // isSuccess,
   } = useMutation({
     mutationFn: async () => {
-        console.log(query)
+        console.log(isPending, query)
       if (!query.mode) {
         throw new Error("Validation query is not defined")
       };
@@ -53,9 +51,8 @@ const VerifyEmail = () => {
           };
           const { data } = await axios.patch(`${api}/users`, meta);
           console.log(data.user);
-          setUser(data.user);
+          setSessionUser(data.user);
           router.push("/");
-          setVerifying(false);
         })
         .catch((error) => {
           console.log(error);
@@ -73,10 +70,10 @@ const VerifyEmail = () => {
 
   return (
     <div className=" mx-auto flex max-w-md flex-col items-center justify-center">
-      <div className=" mb-20 p-8 ">
-        <Logo />
-      </div>
-      {isPending ? (<Spinner color="default" />) : (
+      <Link href={`/`} className=" mb-20 p-8 ">
+        <Logo  />
+      </Link>
+      {isPending ? (<LoadingState size="lg" />) : (
         <>
           {isError && (
             <div className=" bg-white-d400 ring-w1-d8 rounded-sm p-10 text-center shadow-2xl ">
