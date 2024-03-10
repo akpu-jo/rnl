@@ -14,6 +14,7 @@ import axios from "axios";
 import { NewNotePayload } from "@/lib/validators/note";
 import { api } from "@/constants";
 import { useAuth } from "@/contexts/AuthContext";
+import { ReplyIcon } from "lucide-react";
 
 const NewNote = () => {
   const { sessionUser } = useAuth();
@@ -32,6 +33,10 @@ const NewNote = () => {
       const payload: NewNotePayload = {
         body,
         author: sessionUser._id,
+        parent:
+          newNoteTogle.isReply && typeof newNoteTogle.note === "object"
+            ? newNoteTogle.note?._id
+            : undefined,
       };
 
       const { data } = await axios.post(`${api}/notes`, payload);
@@ -40,6 +45,23 @@ const NewNote = () => {
     },
   });
 
+  const InReply = () => {
+    return (
+      <>
+        {newNoteTogle.isReply && (
+          <p className=" flex items-center pb-2 text-base tracking-normal text-slate-500">
+            <ReplyIcon className=" mr-1 h-5 w-5" />
+
+            <span>
+              In reply to{" "}
+              {typeof newNoteTogle.note?.author === "object" &&
+                newNoteTogle.note.author.name}
+            </span>
+          </p>
+        )}
+      </>
+    );
+  };
   const noteForm = () => {
     return (
       <div className=" flex gap-4">
@@ -64,15 +86,15 @@ const NewNote = () => {
       size={modalSize}
       placement={modalPosition}
       scrollBehavior="inside"
-      isOpen={newNoteTogle}
+      isOpen={newNoteTogle.open}
       className="bg-l50-d400 py-6 ring-zinc-800  dark:ring-1"
-      onClose={() => setNewNoteTogle(false)}
+      onClose={() =>
+        setNewNoteTogle({ open: false, note: null, isReply: false })
+      }
     >
       <ModalContent>
-        {/* <ModalHeader className=" -mb-3 flex justify-start text-lg font-medium tracking-wide ">
-          New Note
-        </ModalHeader> */}
         <ModalBody>
+          <InReply />
           {noteForm()}
 
           <footer className="flex-ctr-btw">

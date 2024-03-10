@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { ArticleIcon, ChevronDownIcon, CreateIcon } from "../icons/Icons";
 import {
@@ -15,9 +15,8 @@ import { useAppStates } from "@/contexts/AppStates";
 import { useRouter } from "next/navigation";
 
 const CustomDropdownMenu = () => {
-
-  const { setNewNoteTogle } = useAppStates();
-  const router = useRouter()
+  const { setNewNoteTogle, newNoteTogle } = useAppStates();
+  const router = useRouter();
 
   return (
     <DropdownMenu>
@@ -25,21 +24,18 @@ const CustomDropdownMenu = () => {
         <ChevronDownIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" bg-l50-d400 absolute -right-5 -top-0.5 px-2 dark:border-slate-600 ">
-        <DropdownMenuLabel>
-          <ButtonWithIcon
-            icon={<CreateIcon />}
-            label={"Note"}
-            action={() => setNewNoteTogle(true)}
-          />
-
+        <DropdownMenuLabel
+          onClick={() => setNewNoteTogle({ ...newNoteTogle, open: true })}
+          className=" cursor-pointer"
+        >
+          <ButtonWithIcon icon={<CreateIcon />} label={"Note"} />
         </DropdownMenuLabel>
         <DropdownMenuSeparator className=" bg-slate-200 dark:bg-slate-500" />
-        <DropdownMenuLabel>
-          <ButtonWithIcon
-            icon={<ArticleIcon />}
-            label={"Article"}
-            action={() => router.push('/new/article')}
-          />
+        <DropdownMenuLabel
+          className=" cursor-pointer"
+          onClick={() => router.push("/new/article")}
+        >
+          <ButtonWithIcon icon={<ArticleIcon />} label={"Article"} />
         </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>

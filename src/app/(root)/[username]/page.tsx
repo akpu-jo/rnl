@@ -12,12 +12,13 @@ const UserProfilePage = async ({
   params: { username: string };
 }) => {
   const { user } = await fetchUser(params.username);
+  console.log(params);
 
   return (
     <>
       <TopBar
         left={<LeftNavContent pageContext={user.name} />}
-        right={<AppSettings profileUser={user}  />}
+        right={<AppSettings profileUser={user} />}
       />
       <div className=" mx-auto max-w-xl">
         <ProfileHead profileUser={user} />

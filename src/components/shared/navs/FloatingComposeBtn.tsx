@@ -8,7 +8,7 @@ import { ArticleIcon, CreateIcon, PlusIcon } from "../icons/Icons";
 import { useAppStates } from "@/contexts/AppStates";
 
 const FloatingComposeBtn = () => {
-  const { setNewNoteTogle } = useAppStates();
+  const { setNewNoteTogle, newNoteTogle } = useAppStates();
 
   const [showOverlay, setShowOverlay] = useState(false);
 
@@ -35,7 +35,7 @@ const FloatingComposeBtn = () => {
             <span
               onClick={() => {
                 setShowOverlay(false);
-                showOverlay && setNewNoteTogle(true);
+                showOverlay && setNewNoteTogle({ ...newNoteTogle, open: true });
               }}
               className=" bg-tradewind-900 dark:bg-tradewind-900 inline-block rounded-full p-4 text-white shadow-xl outline-none"
             >

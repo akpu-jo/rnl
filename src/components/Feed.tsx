@@ -11,7 +11,6 @@ const Feed = async () => {
 
   const result = await fetchNotes(reqQuery);
   const { notes, success } = result;
-  // console.log(result.response.data)
 
   return (
     <div className=" space-y-3 sm:mt-4">

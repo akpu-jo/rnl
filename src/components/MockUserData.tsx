@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
-import LoadingState from "../ui/LoadingState";
+import LoadingState from "./ui/LoadingState";
 
 const MockUserData = () => {
   const {

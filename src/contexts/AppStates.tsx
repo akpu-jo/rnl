@@ -1,20 +1,21 @@
 "use client";
 
-import React, { ReactNode, createContext, useContext, useState } from "react";
+import { List, Note } from "@/types";
+import React, { createContext, useContext, useState } from "react";
 
 interface AppContextType {
-  newNoteTogle: boolean;
-  setNewNoteTogle: (newNoteTogle: boolean) => void;
-  navContent: {
-    right: string | ReactNode;
-    left: string | ReactNode;
-    center: string | ReactNode;
+  lists: List[] | [];
+  setLists: React.Dispatch<React.SetStateAction<List[] | []>>;
+  newNoteTogle: {
+    open: boolean;
+    isReply?: boolean;
+    note?: Note | null;
   };
-  setNavContent: React.Dispatch<
+  setNewNoteTogle: React.Dispatch<
     React.SetStateAction<{
-      right: string | ReactNode;
-      left: string | ReactNode;
-      center: string | ReactNode;
+      open: boolean;
+      isReply?: boolean;
+      note?: Note | null;
     }>
   >;
 }
@@ -23,27 +24,29 @@ const AppStateContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppStateProvider = ({
   children,
+  userLists,
 }: {
   children: React.ReactNode;
+  userLists: List[] | [];
 }) => {
-  const [newNoteTogle, setNewNoteTogle] = useState(false);
-  const [navContent, setNavContent] = useState({
-    right: <></>,
-    left: <></>,
-    center: <></>,
+  const [newNoteTogle, setNewNoteTogle] = useState({
+    open: false,
+    isReply: false,
+    note: null,
   });
+  const [lists, setLists] = useState(userLists || []);
 
   return (
     <AppStateContext.Provider
       value={{
+        lists,
+        setLists,
         newNoteTogle,
-        setNewNoteTogle,
-        navContent,
-        setNavContent: setNavContent as React.Dispatch<
+        setNewNoteTogle: setNewNoteTogle as React.Dispatch<
           React.SetStateAction<{
-            right: string | ReactNode;
-            left: string | ReactNode;
-            center: string | ReactNode;
+            open: boolean;
+            isReply?: boolean;
+            note?: Note | null;
           }>
         >,
       }}

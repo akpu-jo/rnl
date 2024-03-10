@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/popover";
 import { BarsIcon, SettingsIcon } from "../icons/Icons";
 import Theme from "./Theme";
+import Link from "next/link";
 
 const MoreNavOptions = () => {
   return (
@@ -25,10 +26,13 @@ const MoreNavOptions = () => {
           align="start"
           sideOffset={3}
         >
-          <button className="flex-ctr hover:bg-dark-50/5 dark:hover:bg-celery-50/5 mb-2 w-full gap-2 p-2 text-2xl font-light">
+          <Link
+            className="flex-ctr hover:bg-dark-50/5 dark:hover:bg-celery-50/5 mb-2 w-full gap-2 p-2 text-2xl font-light"
+            href={`/account/profile`}
+          >
             <SettingsIcon />
             Setting
-          </button>
+          </Link>
           <Theme />
         </PopoverContent>
       </Popover>

@@ -1,9 +1,11 @@
 "use client";
-import { User } from "@/types";
+import { FollowType, User } from "@/types";
 import UserAvatar from "@/components/shared/UserAvatar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { follow } from "@/lib/actions/userActions";
+import { CheckIcon, PlusIcon } from "lucide-react";
 
 interface ProfileUserProps {
   profileUser: User;
@@ -13,9 +15,38 @@ const ProfileHead = ({ profileUser }: ProfileUserProps) => {
   const { sessionUser } = useAuth();
   const isSessionUser = sessionUser && sessionUser._id === profileUser._id;
 
+  const [isFollowing, setIsFollowing] = useState(
+    profileUser.followers.includes(isSessionUser && isSessionUser._id)
+  );
+  const [followers, setFollowers] = useState(profileUser.followers);
+  // const [showMediaModal, setShowMediaModal] = useState(false);
+
+  const handleFollow = async () => {
+    const data = await follow(sessionUser._id, profileUser._id);
+    setFollowers(data.followers);
+    setIsFollowing(data.followers.includes(sessionUser._id));
+  };
+
+  const followCountJsx = (followType: FollowType, count: number) => {
+    return (
+      <Link
+        href={`/${profileUser.username}/${followType}`}
+        className=" rounded-sm capitalize hover:underline"
+      >
+        <span className=" font-medium ">{count}</span> {followType}
+      </Link>
+    );
+  };
+
+  useEffect(() => {
+    setIsFollowing(
+      profileUser.followers.includes(sessionUser && sessionUser._id)
+    );
+  }, [profileUser.followers, sessionUser]);
+
   return (
     <>
-      <div className=" mx-2 my-8 flex items-start justify-between gap-5">
+      <div className=" mx-2 my-4 flex items-start justify-between gap-5">
         <figure className=" flex items-start gap-6">
           <UserAvatar
             src={profileUser.image}
@@ -31,34 +62,25 @@ const ProfileHead = ({ profileUser }: ProfileUserProps) => {
             </div>
           </figcaption>
         </figure>
-        <div className=" flex-1 p-4">
+        <div className=" p-4">
           {!isSessionUser ? (
-            <div className="flex items-center justify-start">
-              {/* <button className=" bg-blac rounded-md border border-slate-200 px-5 py-1.5 text-lg font-medium">
-                Follow
-              </button> */}
-              {/* <button
-                // onClick={() => {
-                //   user ? handleFollow() : setVisible(true);
-                // }}
-                className=" p-2 bg-slate-100 text-slate-600 font-medium rounded-md mr-5"
+            <div className="flex-ctr">
+              <button
+                onClick={handleFollow}
+                className=" dark-border flex-ctr gap-2 rounded-md border border-slate-200 px-3 py-2 text-lg font-medium"
               >
                 {isFollowing ? (
-                  <span className="flex items-center">
-                    <CheckIcon className=" w-5 h-5" />
-                    Following
-                  </span>
+                  <CheckIcon className=" h-4 w-4" />
                 ) : (
-                  <span className=" flex items-center">
-                    <PlusIcon className=" w-5 h-5" /> Follow
-                  </span>
+                  <PlusIcon className=" h-4 w-4" />
                 )}
-              </button> */}
+                Follow{isFollowing && "ing"}
+              </button>
             </div>
           ) : (
             <Link
               href={`/account/profile`}
-              className=" bg-tradewind-100/10 rounded-md border border-slate-200 px-5 py-2 text-lg font-medium"
+              className="dark-border rounded-md border border-slate-200 px-3 py-2.5 text-lg font-medium"
             >
               Edit profile
             </Link>
@@ -66,10 +88,12 @@ const ProfileHead = ({ profileUser }: ProfileUserProps) => {
         </div>
       </div>
       {profileUser.bio && (
-        <p className="my-1 whitespace-pre-line py-2 text-center text-gray-500">
-          {profileUser.bio}
-        </p>
+        <p className="whitespace-pre-line p-3">{profileUser.bio}</p>
       )}
+      <div className=" text-lz4-d5 mb-2 space-x-3 px-3 py-2 ">
+        {followCountJsx("followers", followers.length)}
+        {followCountJsx("following", profileUser.following.length)}
+      </div>
     </>
   );
 };

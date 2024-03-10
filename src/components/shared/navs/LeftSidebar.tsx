@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 import LinkItems from "./LinkItems";
 import HomeIcon from "../icons/HomeIcon";
@@ -7,20 +7,28 @@ import ProfileIcon from "../icons/ProfileIcon";
 import { ArticleIcon, BellIcon, SearchIcon } from "../icons/Icons";
 import { useAuth } from "@/contexts/AuthContext";
 import MoreNavOptions from "./MoreNavOptions";
+// import JsonData from "../JsonData";
 
-// import { HomeIcon } from "@heroicons/react/24/outline";
 
 const LeftSideBar = () => {
+  const [mounted, setMounted] = useState(false);
   const { sessionUser } = useAuth();
   const { username} = sessionUser !==null && sessionUser
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  if (!mounted) {
+    return null;
+  }
   return (
-    <section className=" leftsidebar">
+    <section className=" leftsidebar" suppressHydrationWarning>
       <div className=" space-y-12">
         <nav className=" pl-5">
           <Logo textColor={""} logoSrc={""} showText={true} />
         </nav>
-        <div className=" space-y-5" suppressHydrationWarning>
+        <div className=" space-y-5" >
           <LinkItems
             label={"Home"}
             icon={<HomeIcon />}
@@ -45,14 +53,15 @@ const LeftSideBar = () => {
             route={"/"}
             active={false}
           />
+
           {sessionUser && (
             <LinkItems
-              label={"Profile"}
-              icon={<ProfileIcon />}
-              route={`/${username}`}
-              active={false}
+            label={"Profile"}
+            icon={<ProfileIcon />}
+            route={`/${username}`}
+            active={false}
             />
-          )}
+            )}
           {/* {sessionUser && (
             <LinkItems
               icon={<ComposeBtn />}
@@ -62,6 +71,7 @@ const LeftSideBar = () => {
         </div>
       </div>
       <div>
+        {/* <JsonData data={sessionUser} /> */}
         <MoreNavOptions />
       </div>
     </section>

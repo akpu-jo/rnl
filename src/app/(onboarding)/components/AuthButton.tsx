@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { signout } from "@/lib/auth/clientAuth";
 import { useRouter } from "next/navigation";
 import React, { ButtonHTMLAttributes, ReactNode } from "react";
 
@@ -9,24 +10,30 @@ interface AuthButtonProps
   label: string | ReactNode;
   authType: "sign-in" | "sign-up" | "signout";
   scroll?: boolean;
+  forwardUrl?: string
 }
 
 const AuthButton = ({
   label,
   authType,
   scroll = false,
+  forwardUrl,
   ...rest
 }: AuthButtonProps) => {
-  const { setAuthFlowStates, authFlowStates, signout } = useAuth();
+  const { setAuthFlowStates, authFlowStates } = useAuth();
   const router = useRouter();
+
+  const forwardQuery = forwardUrl ? `?forward=${forwardUrl}` : ''
+  console.log(forwardUrl)
 
   const handleAuth = () => {
     if (authType !== "signout") {
       setAuthFlowStates({ ...authFlowStates, openAuthModal: true });
-      router.push(`/${authType}`, { scroll });
+      router.push(`/${authType}${forwardQuery}`, { scroll });
     }
     if (authType === "signout"){
         signout()
+        router.push('/welcome')
     }
   };
 

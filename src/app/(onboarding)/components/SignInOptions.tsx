@@ -6,24 +6,24 @@ import {
   MailIcon,
   TwitterIcon,
 } from "@/components/shared/icons/Icons";
-import HorizontalRule from "@/components/ui/HorizontalRule";
 import RecButton from "@/components/ui/buttons/RecButton";
 import Input from "@/components/ui/inputs/Input";
 import { useAuth } from "@/contexts/AuthContext";
-import { google, twitter } from "@/lib/firebase/init";
+import { google, twitter } from "@/lib/auth/firebase/init";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
-import EmailVerification from "../verification/EmailVerification";
+import { signin, signinWithProvider } from "@/lib/auth/clientAuth";
+
+import { AuthProvider as AuthProviderProp } from "firebase/auth";
+import { defaultForwardUrl } from "@/routes";
 
 const SignInOptions = () => {
-  const { signinWithProvider, signin, authFlowStates: {showVerifyEmail} } = useAuth();
-
+  const { setSessionUser, setAuthFlowStates, authFlowStates } = useAuth();
 
   const router = useRouter();
   const queryParams = useSearchParams();
 
-  const forwardRoute = queryParams.get("forward")
-
+  const forwardRoute = queryParams.get("forward") || defaultForwardUrl;
 
   const [showOptions, setShowOptions] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -34,6 +34,24 @@ const SignInOptions = () => {
   });
 
   const { email, password } = userData;
+
+  const handleAuthWithProvider = async (provider: AuthProviderProp) => {
+    const user = await signinWithProvider(provider);
+    console.log(user);
+    setSessionUser(user);
+    setAuthFlowStates({ ...authFlowStates, openAuthModal: false });
+    router.push(forwardRoute);
+  };
+
+  const handleSigninWithEmail = async (
+    e:
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    signin(e, email, password);
+    setAuthFlowStates({ ...authFlowStates, openAuthModal: false });
+    router.push(forwardRoute);
+  };
 
   const showSigninWithEmail = () => {
     setShowOptions(false);
@@ -49,29 +67,29 @@ const SignInOptions = () => {
   const options = () => {
     return (
       <>
-        <div className=" mx-10 flex flex-col gap-2">
+        <div className=" space-y-3 md:mx-10">
           <RecButton
-            action={() => signinWithProvider(google)}
+            action={() => handleAuthWithProvider(google)}
             label={`Sign in with Google`}
             icon={<GoogleIcon />}
             btnType={undefined}
             disabled={false}
             bg={""}
-            textColor={"text-l7-d9"}
+            // textColor={"text-l7-d9"}
           />
           <RecButton
-            action={() => signinWithProvider(twitter)}
+            action={() => handleAuthWithProvider(twitter)}
             label={`Sign in with Twitter`}
             icon={<TwitterIcon />}
             btnType={undefined}
             disabled={false}
             bg={""}
-            textColor={"text-l7-d9"}
+            // textColor={"text-l7-d9"}
           />
-          <div className=" flex w-full items-center gap-2">
-            <HorizontalRule className=" w-full border-slate-300/20" />
-            <p>or</p>
-            <HorizontalRule className=" w-full border-slate-300/20" />
+          <div className="flex w-full items-center gap-2">
+            <hr className=" flex-1 dark:border-slate-600" />
+            <p className="">or</p>
+            <hr className=" flex-1 dark:border-slate-600" />
           </div>
           <RecButton
             action={showSigninWithEmail}
@@ -80,7 +98,7 @@ const SignInOptions = () => {
             btnType={undefined}
             disabled={false}
             bg={""}
-            textColor={"text-l7-d9"}
+            // textColor={"text-l7-d9"}
           />
         </div>
 
@@ -97,30 +115,34 @@ const SignInOptions = () => {
     );
   };
   const signinWithEmail = () => {
-    console.log(forwardRoute)
+    console.log(forwardRoute);
     return (
-      <form action="" className="flex w-full max-w-xs flex-col gap-1">
-        <Input
-          type={"email"}
-          placeholder={"Email"}
-          icon={<MailIcon fill={"currentColor"} />}
-          value={email}
-          onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-        />
-        <Input
-          type={"password"}
-          placeholder={"Password"}
-          icon={<LockIcon />}
-          value={password}
-          onChange={(e) =>
-            setUserData({ ...userData, password: e.target.value })
-          }
-        />
+      <form action="" className=" mx-8 w-full max-w-sm ">
+        <div className=" flex flex-col  gap-2 pb-3">
+          <Input
+            type={"email"}
+            placeholder={"Email"}
+            icon={<MailIcon fill={"currentColor"} />}
+            value={email}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
+          />
+          <Input
+            type={"password"}
+            placeholder={"Password"}
+            icon={<LockIcon />}
+            value={password}
+            onChange={(e) =>
+              setUserData({ ...userData, password: e.target.value })
+            }
+          />
+        </div>
         <RecButton
           btnType={"submit"}
-          action={(e) => signin(e, email, password, forwardRoute)}
+          action={(e) => handleSigninWithEmail(e)}
           label={"Sign In"}
-          bg={"bg-tradewind-900/70 font-semibold tracking-wider"}
+          bg={"bg-tradewind-900/80 font-semibold tracking-wider"}
         />
         <button
           onClick={() => showSigninOptions()}
@@ -134,15 +156,9 @@ const SignInOptions = () => {
   };
   return (
     <div className=" flex flex-col items-center gap-10">
-      {showVerifyEmail ? (
-        <EmailVerification />
-      ) : (
-        <>
-          <h2 className="text-3xl font-semibold  ">{heading}</h2>
-          {showOptions && options()}
-          {showForm && signinWithEmail()}
-        </>
-      )}
+      <h2 className="text-3xl font-semibold  ">{heading}</h2>
+      {showOptions && options()}
+      {showForm && signinWithEmail()}
     </div>
   );
 };

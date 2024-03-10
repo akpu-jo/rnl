@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import  EditorLink from '@tiptap/extension-link'
 import TextareaAutosize from "react-textarea-autosize";
+import Placeholder from '@tiptap/extension-placeholder'
 
 import React from "react";
 import EditorToolbar from "./EditorToolbar";
@@ -15,11 +16,14 @@ const Editor = () => {
     extensions: [StarterKit.configure({
         heading: {
             levels: [1,2]
-        }
+        },
+        
     }), EditorLink.configure({
         protocols: ['ftp', 'mailto']
+    }), Placeholder.configure({
+      placeholder: 'Start writing...',
     })],
-    content: "<p>Hello World! 🌎️</p>",
+    // content: "<p>Hello World! 🌎️</p>",
   });
 
   const uploading = false;
@@ -64,7 +68,7 @@ const Editor = () => {
           //   localStorage.setItem("title", JSON.stringify(e.target.value));
         }}
       />
-      <EditorContent editor={editor} className=" focus:outline-none" />
+      <EditorContent editor={editor}  className=" focus:outline-none" />
     </div>
   );
 };

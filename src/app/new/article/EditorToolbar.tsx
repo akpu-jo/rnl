@@ -9,10 +9,8 @@ import {
   Link,
   List,
   ListOrdered,
-  Quote,
   Redo2,
   Strikethrough,
-  Underline,
   Undo2,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
@@ -21,58 +19,58 @@ interface EditorProps {
   editor: Editor | null;
 }
 
-const toolbar = [
-  {
-    value: "heading1",
-    ariaLabel: "Toggle heading-one",
-    icon: <Heading1 className="h-4 w-4" />,
-  },
-  {
-    value: "heading2",
-    ariaLabel: "Toggle heading-two",
-    icon: <Heading2 className="h-4 w-4" />,
-  },
-  {
-    value: "bold",
-    ariaLabel: "Toggle bold",
-    icon: <Bold className="h-4 w-4" />,
-  },
-  {
-    value: "italic",
-    ariaLabel: "Toggle italic",
-    icon: <Italic className="h-4 w-4" />,
-  },
-  {
-    value: "underline",
-    ariaLabel: "Toggle underline",
-    icon: <Underline className="h-4 w-4" />,
-  },
-  {
-    value: "list",
-    ariaLabel: "Toggle unordered list",
-    icon: <List className="h-4 w-4" />,
-  },
-  {
-    value: "orderedList",
-    ariaLabel: "Toggle ordered-list",
-    icon: <ListOrdered className="h-4 w-4" />,
-  },
-  {
-    value: "quote",
-    ariaLabel: "Toggle quote",
-    icon: <Quote className="h-4 w-4" />,
-  },
-  {
-    value: "link",
-    ariaLabel: "Toggle link",
-    icon: <Link className="h-4 w-4" />,
-  },
-  {
-    value: "image",
-    ariaLabel: "add image",
-    icon: <Img className="h-4 w-4" />,
-  },
-];
+// const toolbar = [
+//   {
+//     value: "heading1",
+//     ariaLabel: "Toggle heading-one",
+//     icon: <Heading1 className="h-4 w-4" />,
+//   },
+//   {
+//     value: "heading2",
+//     ariaLabel: "Toggle heading-two",
+//     icon: <Heading2 className="h-4 w-4" />,
+//   },
+//   {
+//     value: "bold",
+//     ariaLabel: "Toggle bold",
+//     icon: <Bold className="h-4 w-4" />,
+//   },
+//   {
+//     value: "italic",
+//     ariaLabel: "Toggle italic",
+//     icon: <Italic className="h-4 w-4" />,
+//   },
+//   {
+//     value: "underline",
+//     ariaLabel: "Toggle underline",
+//     icon: <Underline className="h-4 w-4" />,
+//   },
+//   {
+//     value: "list",
+//     ariaLabel: "Toggle unordered list",
+//     icon: <List className="h-4 w-4" />,
+//   },
+//   {
+//     value: "orderedList",
+//     ariaLabel: "Toggle ordered-list",
+//     icon: <ListOrdered className="h-4 w-4" />,
+//   },
+//   {
+//     value: "quote",
+//     ariaLabel: "Toggle quote",
+//     icon: <Quote className="h-4 w-4" />,
+//   },
+//   {
+//     value: "link",
+//     ariaLabel: "Toggle link",
+//     icon: <Link className="h-4 w-4" />,
+//   },
+//   {
+//     value: "image",
+//     ariaLabel: "add image",
+//     icon: <Img className="h-4 w-4" />,
+//   },
+// ];
 const EditorToolbar = ({ editor }: EditorProps) => {
   if (!editor) return null;
 

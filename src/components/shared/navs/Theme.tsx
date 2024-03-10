@@ -4,9 +4,18 @@ import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { DesktopIcon, MoonIcon, SunIcon } from "../icons/Icons";
 
-const Theme = ({ ...props }) => {
+const Theme = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  if (!mounted) {
+    return null;
+  }
+  
   const modes = [
     {
       mode: "light",
@@ -21,19 +30,10 @@ const Theme = ({ ...props }) => {
       icon: <DesktopIcon />,
     },
   ];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <>
       <h3 className=" px-2 pb-2 text-xl font-light">Appearance</h3>
-      <div className="  flex items-center justify-start gap-[1px] ">
+      <div suppressHydrationWarning className="  flex items-center justify-start gap-[1px] ">
         {modes.map((m) => (
           <button
             key={m.mode}

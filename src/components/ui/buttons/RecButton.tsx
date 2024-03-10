@@ -12,7 +12,7 @@ interface RecButtonType {
 }
 
 const RecButton = ({
-  btnType,
+  btnType = 'button',
   disabled,
   action,
   label,
@@ -28,9 +28,9 @@ const RecButton = ({
       onClick={action}
       className={` flex w-full items-center justify-center gap-5 text-lg sm:text-base ${bg} ${
         textColor || ""
-      } px-14 py-2 tracking-wide ring-1 ${
+      } border px-14 py-3 tracking-wide dark:border-slate-600 ${
         disabled && "cursor-not-allowed bg-opacity-50"
-      } ring-w1-d8 my-[calc(0.3rem)] rounded-sm outline-none `}
+      }  my-[calc(0.3rem)] rounded-md outline-none `}
     >
       {icon}
       {label}

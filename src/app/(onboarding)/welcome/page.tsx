@@ -3,7 +3,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <main className="text-slate-900 dark:bg-white">
+    <main className=" text-foreground bg-background light ">
       <Welcome />
     </main>
   );

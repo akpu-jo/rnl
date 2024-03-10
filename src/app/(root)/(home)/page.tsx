@@ -1,4 +1,3 @@
-import AuthButton from "@/app/(onboarding)/components/AuthButton";
 import Feed from "@/components/Feed";
 import ComposeBtn from "@/components/shared/navs/ComposeBtn";
 import RightNavContent from "@/components/shared/navs/topnavs/RightNavContent";
@@ -10,7 +9,7 @@ export default function Home() {
   const Title = () => {
     return (
       <Link
-        className=" text-4xl font-medium tracking-tighter sm:hidden"
+        className=" text-3xl font-semibold tracking-tighter sm:hidden"
         href={"/"}
       >
         rnlinked.
@@ -19,12 +18,18 @@ export default function Home() {
   };
   return (
     <>
-      <TopBar left={<Title />} right={<RightNavContent navContent={<ComposeBtn />} showNotificationBtn={true} showUser={true} />} />
+      <TopBar
+        left={<Title />}
+        right={
+          <RightNavContent
+            navContent={<ComposeBtn />}
+            showNotificationBtn={true}
+            showUser={true}
+          />
+        }
+      />
       <div className=" mx-auto max-w-2xl ">
         <Feed />
-        <AuthButton label={"Sign Out"} authType={"signout"} />
-        <AuthButton label={"Login"} authType={"sign-in"} />
-        {/* <MockUserData /> */}
       </div>
     </>
   );
