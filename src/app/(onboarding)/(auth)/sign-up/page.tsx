@@ -1,10 +1,8 @@
-import AuthOptions from "@/components/auth/AuthOptions";
+import AuthOptions from "@/app/(onboarding)/components/AuthOptions";
 import React from "react";
 
 const SignUp = () => {
-  return (
-    <AuthOptions />
-  );
+  return <AuthOptions />;
 };
 
 export default SignUp;

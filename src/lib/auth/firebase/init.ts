@@ -1,3 +1,6 @@
+// initialize firebase on client
+// exposes the auth, and authentication provider instanses
+
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -13,4 +16,4 @@ const google = new GoogleAuthProvider();
 const twitter = new TwitterAuthProvider();
 // const analytics = getAnalytics(app);
 
-export { auth, google, twitter };
+export { auth, google, twitter }; 

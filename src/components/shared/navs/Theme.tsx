@@ -1,16 +1,12 @@
 "use client";
 
 import { useTheme } from "next-themes";
-// import { useTheme } from '@/context/ThemeContext'
 import React, { useEffect, useState } from "react";
-// import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tabs, Tab } from "@nextui-org/tabs";
 import { DesktopIcon, MoonIcon, SunIcon } from "../icons/Icons";
 
 const Theme = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
-  // const {mode, setMode} = useTheme
 
   useEffect(() => {
     setMounted(true);
@@ -19,48 +15,44 @@ const Theme = () => {
   if (!mounted) {
     return null;
   }
+
+  const modes = [
+    {
+      mode: "light",
+      icon: <SunIcon />,
+    },
+    {
+      mode: "dark",
+      icon: <MoonIcon />,
+    },
+    {
+      mode: "system",
+      icon: <DesktopIcon />,
+    },
+  ];
   return (
-    <div>
-      <h3 className=" pb-2 text-2xl font-medium">Appearance</h3>
-      <Tabs selectedKey={theme} size="lg" radius="sm" variant="bordered">
-        <Tab
-          key={"light"}
-          title={
-            <div
-              className=" flex items-center gap-2 text-lg font-medium"
-              onClick={() => setTheme("light")}
-            >
-              <SunIcon />
-              <span>Light</span>
-            </div>
-          }
-        />
-        <Tab
-          key={"dark"}
-          title={
-            <div
-              className=" flex items-center gap-2 text-lg font-medium"
-              onClick={() => setTheme("dark")}
-            >
-              <MoonIcon />
-              <span>Dark</span>
-            </div>
-          }
-        />
-        <Tab
-          key={"system"}
-          title={
-            <div
-              className=" flex items-center gap-2 text-lg font-medium"
-              onClick={() => setTheme("system")}
-            >
-              <DesktopIcon />
-              <span>System</span>
-            </div>
-          }
-        />
-      </Tabs>
-    </div>
+    <>
+      <h3 className=" pb-2 text-xl font-light">Appearance</h3>
+      <div
+        suppressHydrationWarning
+        className="  flex items-center justify-start gap-[1px] "
+      >
+        {modes.map((m) => (
+          <button
+            key={m.mode}
+            className={` flex flex-nowrap items-center gap-1 capitalize ${
+              theme === m.mode
+                ? " bg-tradewind-900"
+                : "dark:bg-dark-400/40 bg-zinc-200 "
+            } flex-1 p-2 first:rounded-l-lg last:rounded-r-lg`}
+            onClick={() => setTheme(m.mode)}
+          >
+            {m.icon}
+            {m.mode}
+          </button>
+        ))}
+      </div>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
+import { Modal, ModalContent, ModalBody } from "@nextui-org/modal";
 import { useAppStates } from "@/contexts/AppStates";
 import { useMediaQuery } from "react-responsive";
 import TextareaAutosize from "react-textarea-autosize";
@@ -13,8 +13,11 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { NewNotePayload } from "@/lib/validators/note";
 import { api } from "@/constants";
+import { useAuth } from "@/contexts/AuthContext";
+import { ReplyIcon } from "lucide-react";
 
 const NewNote = () => {
+  const { sessionUser } = useAuth();
   const { newNoteTogle, setNewNoteTogle } = useAppStates();
   const isMobile = useMediaQuery({ maxWidth: 640 });
 
@@ -22,23 +25,54 @@ const NewNote = () => {
   const modalPosition = isMobile ? "top" : "top";
   const extraClass = "hover:bg-slate-500/10 rounded-lg p-1";
 
-  const [note, setNote] = useState<string>("");
+  const [body, setBody] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { mutate: createNote } = useMutation({
     mutationFn: async () => {
       console.log("data");
+      setLoading(true);
       const payload: NewNotePayload = {
-        note,
+        body,
+        author: sessionUser._id,
+        parent:
+          newNoteTogle.isReply && typeof newNoteTogle.note === "object"
+            ? newNoteTogle.note?._id
+            : undefined,
       };
-      const { data } = await axios.post(`${api}/posts`, payload);
+
+      const { data } = await axios.post(`${api}/notes`, payload);
+      console.log(data);
+      if (data.success) {
+        setBody("");
+        setNewNoteTogle({ ...newNoteTogle, open: false });
+      }
+      setLoading(false);
       return data;
     },
   });
 
+  const InReply = () => {
+    return (
+      <>
+        {newNoteTogle.isReply && (
+          <p className=" flex items-center pb-2 text-base tracking-normal text-slate-500">
+            <ReplyIcon className=" mr-1 h-5 w-5" />
+
+            <span>
+              In reply to{" "}
+              {typeof newNoteTogle.note?.author === "object" &&
+                newNoteTogle.note.author.name}
+            </span>
+          </p>
+        )}
+      </>
+    );
+  };
   const noteForm = () => {
     return (
       <div className=" flex gap-4">
-        <UserAvatar radius={"lg"} src={""} />
+        <UserAvatar radius={"lg"} src={sessionUser && sessionUser.image} />
         <TextareaAutosize
           className=" bg-l50-d400 w-full flex-1 focus:outline-none"
           minRows={6}
@@ -46,8 +80,8 @@ const NewNote = () => {
           maxLength={750}
           placeholder="Start a note..."
           autoFocus
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
         />
       </div>
     );
@@ -59,15 +93,15 @@ const NewNote = () => {
       size={modalSize}
       placement={modalPosition}
       scrollBehavior="inside"
-      isOpen={newNoteTogle}
-      className="bg-l50-d400 ring-zinc-800 dark:ring-1 "
-      onClose={() => setNewNoteTogle(false)}
+      isOpen={newNoteTogle.open}
+      className="bg-l50-d400 py-6 ring-zinc-800  dark:ring-1"
+      onClose={() =>
+        setNewNoteTogle({ open: false, note: null, isReply: false })
+      }
     >
       <ModalContent>
-        <ModalHeader className=" -mb-3 flex justify-start text-lg font-medium tracking-wide ">
-          New Note
-        </ModalHeader>
         <ModalBody>
+          <InReply />
           {noteForm()}
 
           <footer className="flex-ctr-btw">
@@ -80,8 +114,9 @@ const NewNote = () => {
             </div>
             {/* <Picker data={data} onEmojiSelect={console.log} /> */}
             <ButtonWithIcon
+              disabled={loading}
               action={() => createNote()}
-              extraClass="bg-tradewind-900/80 rounded-md text-white font-medium px-4 pt-1 "
+              extraClass="bg-tradewind-900 rounded-md text-white font-medium px-4 pt-1 "
               label="Post"
             />
           </footer>

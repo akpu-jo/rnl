@@ -3,8 +3,11 @@ import React from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/shared/navs/Logo";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ModalLayout = ({ children }: { children: React.ReactNode }) => {
+  const {authFlowStates} = useAuth()
+  const {openAuthModal} = authFlowStates
   const router = useRouter();
 
   return (
@@ -12,7 +15,7 @@ const ModalLayout = ({ children }: { children: React.ReactNode }) => {
       <Modal
         radius="sm"
         size="xl"
-        isOpen={true}
+        isOpen={openAuthModal}
         className="bg-white-d400 py-10 ring-zinc-800 dark:ring-1  "
         isDismissable={false}
         onClose={() => router.back()}

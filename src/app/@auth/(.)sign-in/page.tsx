@@ -1,10 +1,8 @@
-import AuthOptions from '@/components/auth/AuthOptions'
-import React from 'react'
+import AuthOptions from "@/app/(onboarding)/components/AuthOptions";
+import React from "react";
 
 const SignInModal = () => {
-  return (
-   <AuthOptions />
-  )
-}
+  return <AuthOptions />;
+};
 
-export default SignInModal
+export default SignInModal;

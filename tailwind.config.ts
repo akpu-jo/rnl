@@ -10,7 +10,7 @@ const config: Config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@nextui-org/theme/dist/components/(tabs|modal|avatar|divider|spinner).js'
+    './node_modules/@nextui-org/theme/dist/components/(tabs|modal|avatar|divider|spinner|switch).js'
   ],
   theme: {
     // container: {
@@ -96,6 +96,9 @@ const config: Config = {
       },
     },
   },
-  plugins: [nextui(), require("tailwindcss-animate")],
+  plugins: [
+
+    nextui(), require("tailwindcss-animate")
+  ],
 }
 export default config
