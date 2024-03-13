@@ -2,7 +2,6 @@ import React from "react";
 import LinkItems from "./LinkItems";
 import HomeIcon from "../icons/HomeIcon";
 import { ArticleIcon, BellIcon, SearchIcon } from "../icons/Icons";
-import MoreNavOptions from "./MoreNavOptions";
 import FloatingComposeBtn from "./FloatingComposeBtn";
 
 const MobileNav = () => {
@@ -32,9 +31,7 @@ const MobileNav = () => {
         route={"/"}
         active={false}
       />
-    
-      <MoreNavOptions />
-      <FloatingComposeBtn />
+          <FloatingComposeBtn />
     </div>
   );
 };

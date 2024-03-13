@@ -53,7 +53,10 @@ const ListCard = ({ noteId }: { noteId: string }) => {
       };
 
       return (
-        <form suppressHydrationWarning className=" mx-4 space-y-6 p-2 py-4 text-xl font-light ">
+        <form
+          suppressHydrationWarning
+          className=" mx-4 space-y-6 p-2 py-4 text-xl font-light "
+        >
           {!isMobile && <h2 className=" text-xl">Create new list</h2>}
           <input
             required

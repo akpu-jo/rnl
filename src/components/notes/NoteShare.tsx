@@ -1,7 +1,8 @@
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { ShareIcon } from "../shared/icons/Icons";
+// import { ShareIcon } from "../shared/icons/Icons";
 import { toast } from "sonner";
+import { Share2Icon } from "lucide-react";
 
 const NoteShare = ({ copiedNoteLink }: { copiedNoteLink: string }) => {
   const handleCopyToClipboard = async () => {
@@ -16,7 +17,7 @@ const NoteShare = ({ copiedNoteLink }: { copiedNoteLink: string }) => {
     <>
       <Popover>
         <PopoverTrigger>
-          <ShareIcon />
+          <Share2Icon />
         </PopoverTrigger>
         <PopoverContent
           className=" bg-white-d700 dark:bg-dark-400 border-2 dark:border-slate-800"

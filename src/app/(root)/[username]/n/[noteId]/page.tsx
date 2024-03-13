@@ -5,9 +5,9 @@ import { api } from "@/constants";
 import { fetchNoteById } from "@/lib/actions/noteActions";
 import { Metadata, ResolvingMetadata } from "next";
 import React from "react";
-import { headers } from "next/headers"
-
-
+import { headers } from "next/headers";
+import UserAvatar from "@/components/shared/UserAvatar";
+import Link from "next/link";
 
 interface NoteProps {
   params: { noteId: string; username: string };
@@ -40,9 +40,9 @@ export const generateMetadata = async (
 };
 
 const NotePage = async ({ params }: NoteProps) => {
-   const headersList = headers()
+  const headersList = headers();
 
- const headersListEntries = JSON.stringify(headersList.get('referer'))
+  const headersListEntries = JSON.stringify(headersList.get("referer"));
 
   console.log(headersListEntries);
 
@@ -60,7 +60,22 @@ const NotePage = async ({ params }: NoteProps) => {
             {
               <div className="mx-3 ">
                 {note.parent !== null ? (
-                  <NoteCard note={note.parent} />
+                  <div className=" flex gap-0.5">
+                    <div className=" flex flex-col items-center pt-2">
+                      <Link href={`/${note.parent.author.username}`}>
+                        <UserAvatar
+                          radius={"lg"}
+                          src={note.parent.author.image}
+                        />
+                      </Link>
+
+                      <div className=" relativ dark-border grow rounded-full border-r" />
+                    </div>
+
+                    <span className=" flex-1 pb-6">
+                      <NoteCard hideAvatar={true} note={note.parent} />
+                    </span>
+                  </div>
                 ) : (
                   <div className=" mb-2 mt-16 rounded-lg bg-slate-400 shadow-sm ring-1 ring-slate-100 ">
                     {/* <EmptyStates message={message()} /> */}
@@ -75,9 +90,21 @@ const NotePage = async ({ params }: NoteProps) => {
         <NoteCard isParent={true} note={note} />
 
         {replies.length > 0 && (
-          <div className="mx-3 space-y-2">
+          <div className="mx-3 my-6 space-y-2">
             {replies.map((reply: any, i: React.Key | null | undefined) => (
-              <NoteCard key={i} note={reply} />
+              <div key={i} className=" flex gap-0.5">
+                <div className=" flex flex-col items-center pt-2">
+                  <Link href={`/${reply.author.username}`}>
+                    <UserAvatar radius={"lg"} src={reply.author.image} />
+                  </Link>
+
+                  {/* <div className=" relativ dark-border grow rounded-full border-r" /> */}
+                </div>
+
+                <span className=" flex-1 pb-6">
+                  <NoteCard hideAvatar={true} note={reply} />
+                </span>
+              </div>
             ))}
           </div>
         )}

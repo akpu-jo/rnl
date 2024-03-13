@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { follow } from "@/lib/actions/userActions";
 import { CheckIcon, PlusIcon } from "lucide-react";
+import ButtonWithIcon from "@/components/ui/buttons/Button";
+import NoteShare from "@/components/notes/NoteShare";
 
 interface ProfileUserProps {
   profileUser: User;
@@ -46,47 +48,70 @@ const ProfileHead = ({ profileUser }: ProfileUserProps) => {
 
   return (
     <>
-      <div className=" mx-2 my-4 flex items-start justify-between gap-5">
-        <figure className=" flex items-start gap-6">
-          <UserAvatar
-            src={profileUser.image}
-            extraClass="w-24 h-24 rounded-[2rem]"
-          />
-
-          <figcaption className="py-4">
-            <div className=" leading-3">
-              <p className=" text-2xl font-medium md:text-3xl">
-                {profileUser.name}
-              </p>
-              <p className=" text-lg text-slate-500">@{profileUser.username}</p>
-            </div>
-          </figcaption>
-        </figure>
-        <div className=" p-4">
-          {!isSessionUser ? (
-            <div className="flex-ctr">
-              <button
-                onClick={handleFollow}
-                className=" dark-border flex-ctr gap-2 rounded-md border border-slate-200 px-3 py-2 text-lg font-medium"
-              >
-                {isFollowing ? (
-                  <CheckIcon className=" h-4 w-4" />
-                ) : (
-                  <PlusIcon className=" h-4 w-4" />
-                )}
-                Follow{isFollowing && "ing"}
-              </button>
-            </div>
-          ) : (
-            <Link
-              href={`/account/profile`}
-              className="dark-border rounded-md border border-slate-200 px-3 py-2.5 text-lg font-medium"
-            >
-              Edit profile
-            </Link>
-          )}
+      <section className=" mx-3 my-4 flex w-full items-center justify-center gap-5">
+        <UserAvatar
+          src={profileUser.image}
+          extraClass=" w-20 h-20 rounded-[2rem]"
+        />
+        <div className=" flex-btw w-full flex-1 flex-col sm:flex-row">
+          <div className=" leading-3 sm:py-4">
+            <p className=" text-2xl font-medium md:text-3xl">
+              {profileUser.name}
+            </p>
+            <p className=" text-slate-500 sm:text-lg">
+              @{profileUser.username}
+            </p>
+          </div>
+          <div className=" mt-3 sm:p-4">
+            {!isSessionUser ? (
+              <div className="flex-ctr gap-2">
+                <button
+                  onClick={handleFollow}
+                  className=" dark-border flex-ctr gap-2 rounded-md border border-slate-200 px-3 py-1 text-lg font-medium sm:py-2"
+                >
+                  {isFollowing ? (
+                    <CheckIcon className=" h-4 w-4" />
+                  ) : (
+                    <PlusIcon className=" h-4 w-4" />
+                  )}
+                  Follow{isFollowing && "ing"}
+                </button>
+                <span className=" flex-ctr rounded-full border p-1 dark:border-slate-600">
+                  <ButtonWithIcon
+                    // label="Share"
+                    icon={
+                      <NoteShare
+                        copiedNoteLink={`https://rnlinked.com/${profileUser.username}`}
+                      />
+                    }
+                    extraClass="btn-icon"
+                  />
+                </span>
+              </div>
+            ) : (
+              <div className=" flex-ctr gap-2">
+                <Link
+                  href={`/account/profile`}
+                  className="dark-border rounded-lg border border-slate-200 px-3 py-2 text-lg font-medium sm:py-2.5"
+                >
+                  Edit profile
+                </Link>
+                <span className=" flex-ctr rounded-full border p-1 dark:border-slate-600">
+                  <ButtonWithIcon
+                    // label="Share"
+                    icon={
+                      <NoteShare
+                        copiedNoteLink={`https://rnlinked.com/${profileUser.username}`}
+                      />
+                    }
+                    extraClass="btn-icon"
+                  />
+                </span>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
       {profileUser.bio && (
         <p className="whitespace-pre-line p-3">{profileUser.bio}</p>
       )}

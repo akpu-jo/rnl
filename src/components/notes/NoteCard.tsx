@@ -20,10 +20,12 @@ const NoteCard = ({
   note,
   isParent = false,
   isReply,
+  hideAvatar = false,
 }: {
   note: any;
   isParent?: boolean;
   isReply?: boolean;
+  hideAvatar?: boolean;
 }) => {
   const router = useRouter();
   const { sessionUser } = useAuth();
@@ -68,20 +70,26 @@ const NoteCard = ({
     <div
       // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
       className={` ${
-        isParent ? "" : "bg-white-d700 dark-border border dark:bg-slate-700/40"
-      }  space-y-4 rounded-lg p-2 py-6 hover:bg-opacity-60 md:p-8`}
+        isParent
+          ? ""
+          : " bg-white-d700 dark-border border py-6 dark:bg-slate-700/40"
+      }  space-y-4 rounded-lg px-3  hover:bg-opacity-60 md:p-8`}
       onClick={(e) => router.push(`/${note.author.username}/n/${note._id}`)}
     >
       <section className=" flex-ctr-btw gap-3">
         <div className=" flex-ctr gap-3">
-          <UserAvatar
-            radius={"lg"}
-            src={note.author.image}
-            clickAction={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-              e.stopPropagation();
-              router.push(`/${note.author.username}`);
-            }}
-          />
+          {!hideAvatar && (
+            <UserAvatar
+              radius={"lg"}
+              src={note.author.image}
+              clickAction={(
+                e: React.MouseEvent<HTMLDivElement, MouseEvent>
+              ) => {
+                e.stopPropagation();
+                router.push(`/${note.author.username}`);
+              }}
+            />
+          )}
           <div>
             <span
               className=" flex-ctr cursor-pointer gap-2"
@@ -128,21 +136,6 @@ const NoteCard = ({
 
       <section className="flex-ctr-ard gap-3  text-slate-500">
         <span
-          className={`" flex-ctr ${liked && "text-pink-500"}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setAnimateLike(true);
-            handleLike(note._id);
-          }}
-        >
-          <ButtonWithIcon
-            icon={<HeartIcon liked={liked} animateLike={animateLike} />}
-            extraClass={` btn-icon `}
-          />
-          {!isParent && noteLikes.length > 0 && noteLikes.length}
-        </span>
-
-        <span
           className=" flex-ctr"
           onClick={(e) => {
             e.stopPropagation();
@@ -157,6 +150,21 @@ const NoteCard = ({
           <ButtonWithIcon icon={<ChatBubbleIcon />} extraClass=" btn-icon" />
           {note.children.length > 0 && note.children.length}
         </span>
+        <span
+          className={`" flex-ctr ${liked && "text-pink-500"}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setAnimateLike(true);
+            handleLike(note._id);
+          }}
+        >
+          <ButtonWithIcon
+            icon={<HeartIcon liked={liked} animateLike={animateLike} />}
+            extraClass={` btn-icon `}
+          />
+          {!isParent && noteLikes.length > 0 && noteLikes.length}
+        </span>
+
         {/* <span className=" flex-ctr" onClick={(e) => e.stopPropagation()}>
           <ButtonWithIcon icon={<EyeIcon />} extraClass="btn-icon" />
           {note.views}

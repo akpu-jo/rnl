@@ -26,10 +26,12 @@ const NewNote = () => {
   const extraClass = "hover:bg-slate-500/10 rounded-lg p-1";
 
   const [body, setBody] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { mutate: createNote } = useMutation({
     mutationFn: async () => {
       console.log("data");
+      setLoading(true);
       const payload: NewNotePayload = {
         body,
         author: sessionUser._id,
@@ -41,6 +43,11 @@ const NewNote = () => {
 
       const { data } = await axios.post(`${api}/notes`, payload);
       console.log(data);
+      if (data.success) {
+        setBody("");
+        setNewNoteTogle({ ...newNoteTogle, open: false });
+      }
+      setLoading(false);
       return data;
     },
   });
@@ -107,6 +114,7 @@ const NewNote = () => {
             </div>
             {/* <Picker data={data} onEmojiSelect={console.log} /> */}
             <ButtonWithIcon
+              disabled={loading}
               action={() => createNote()}
               extraClass="bg-tradewind-900 rounded-md text-white font-medium px-4 pt-1 "
               label="Post"
